@@ -17,8 +17,8 @@ const ItemSmall = ({item}) => {
         resizeMode={FastImage.resizeMode.cover}
       >
         <View style={styles.cardTitleolg}>
-        <Text style={{ color: colors.white() }}>{item.title}</Text>
-        <Text style={{ color: colors.white() }}>{item.createdAt}</Text>
+        <Text style={{ color: colors.black() }}>{item.title}</Text>
+        <Text style={{ color: colors.black() }}>{item.createdAt}</Text>
         </View>
       </FastImage>
       <View style={styles.cardContent}>
@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingTop: 90,
     fontFamily: fontType['Pjs-Bold'],
+    
   },
   cardTextolg: {
     fontSize: 10,
@@ -65,9 +66,9 @@ const styles = StyleSheet.create({
   cardImage: {
     width:350,
     height: 150,
-    borderRadius: 20,
-    marginTop: 10,
-    marginHorizontal: 25,
+    borderRadius: 10,
+    marginTop: 5,
+    // marginHorizontal: 1,
     resizeMode: 'cover',
   },
   cardInfo: {
