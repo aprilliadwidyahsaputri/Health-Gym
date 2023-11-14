@@ -22,16 +22,7 @@ export default function Home() {
             onChangeText={this.updateSearch}
           />
       </View>
-
       <Listblog/>
-      <View style={styles.container1}>
-  <View style={styles.header1}>
-   <StatusBar translucent={false} backgroundColor={colors.darkModeBlue()}/>
-   <MenuBoard color={colors.black()} variant="Linear" size={24} />  
-    <Radar color={colors.black()} variant="Linear" size={24} />  
-    <User color={colors.black()} variant="Linear" size={24} />
-  </View>
-  </View>
     </View>
   );
 }

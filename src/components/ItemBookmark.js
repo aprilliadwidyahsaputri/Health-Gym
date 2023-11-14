@@ -14,7 +14,7 @@ const truncateTextByWords = (text, maxWords) => {
 
 const Itemprogram = ({item, onPress, variant}) => {
   return (
-      <TouchableOpacity style={styles.cardItem} onPress={()=>{}}>
+    <TouchableOpacity style={styles.cardItem} onPress={()=>navigation.navigate('BlogDetail', {blogId: item.id})}>
         <FastImage
           style={styles.cardImage}
           source={{
@@ -26,8 +26,8 @@ const Itemprogram = ({item, onPress, variant}) => {
           <View style={styles.cardContent}>
             <View style={styles.cardCategory}>
             <View style={styles.cardi}>
-                <Text style={{ color: colors.black() }}>{item.createdAt}</Text>
-                <Text style={{ color: colors.black() }}>{item.title}</Text>
+                <Text style={{ color: colors.white() }}>{item.createdAt}</Text>
+                <Text style={{ color: colors.white() }}>{item.title}</Text>
             </View>
               <View style={styles.categoryBadge}>
                 <Text style={styles.categoryLabel}>{item.category}</Text>

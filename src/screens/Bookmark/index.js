@@ -18,20 +18,12 @@ const Programolg = () => {
         {BlogList.map((item, index) => (
           <ItemBookmark item={item} key={index} />
         ))}
-        <Text style={{...styles.title2}}>Semua Program</Text>
+        {/* <Text style={{...styles.title2}}>Semua Program</Text>
         {Program.map((item, index) => (
           <ItemSmall item={item} key={index} />
-        ))}
+        ))} */}
         </View>
       </ScrollView>
-      <View style={styles.container1}>
-  <View style={styles.header1}>
-   <StatusBar translucent={false} backgroundColor={colors.darkModeBlue()}/>
-   <MenuBoard color={colors.black()} variant="Linear" size={24} />  
-    <Radar color={colors.black()} variant="Linear" size={24} />  
-    <User color={colors.black()} variant="Linear" size={24} />
-  </View>
-  </View>
     </View>
   );
 };
