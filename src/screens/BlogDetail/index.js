@@ -1,10 +1,11 @@
-import {StyleSheet, Text, View, ScrollView, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import {StyleSheet, Text, View, ScrollView, TouchableOpacity, Animated} from 'react-native';
+import React, {useState, useRef} from 'react';
 import {ArrowLeft, Like1, Receipt21, Message, Share, More} from 'iconsax-react-native';
 import {useNavigation} from '@react-navigation/native';
 import {BlogList} from '../../../data';
 import FastImage from 'react-native-fast-image';
 import { fontType, colors } from '../../theme';
+
 const formatNumber = number => {
   if (number >= 1000000000) {
     return (number / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
@@ -15,9 +16,20 @@ const formatNumber = number => {
   if (number >= 1000) {
     return (number / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
   }
-  return number.toString();
+  // return number.toString();
 };
+
 const BlogDetail = ({route}) => {
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const diffClampY = Animated.diffClamp(scrollY, 0, 52);
+  const headerY = diffClampY.interpolate({
+    inputRange: [0, 52],
+    outputRange: [0, -52],
+  });
+  const bottomBarY = diffClampY.interpolate({
+    inputRange: [0, 52],
+    outputRange: [0, 52],
+  });
   const {blogId} = route.params;
   const [iconStates, setIconStates] = useState({
     liked: {variant: 'Linear', color: colors.grey(0.6)},
@@ -39,10 +51,10 @@ const BlogDetail = ({route}) => {
   };
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <Animated.View style={[styles.header, {transform:[{translateY:headerY}]}]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <ArrowLeft
-            color={colors.darkModeBlue(0.6)}
+            color={colors.grey(0.6)}
             variant="Linear"
             size={24}
           />
@@ -50,14 +62,18 @@ const BlogDetail = ({route}) => {
         <View style={{flexDirection: 'row', justifyContent: 'center', gap: 20}}>
           <Share color={colors.grey(0.6)} variant="Linear" size={24} />
           <More
-            color={colors.darkModeBlue(0.6)}
+            color={colors.grey(0.6)}
             variant="Linear"
             style={{transform: [{rotate: '90deg'}]}}
           />
         </View>
-      </View>
-      <ScrollView
+      </Animated.View>
+      <Animated.ScrollView
         showsVerticalScrollIndicator={false}
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {y: scrollY}}}],
+          {useNativeDriver: true},
+        )}
         contentContainerStyle={{
           paddingHorizontal: 24,
           paddingTop: 62,
@@ -83,8 +99,8 @@ const BlogDetail = ({route}) => {
         </View>
         <Text style={styles.title}>{selectedBlog.title}</Text>
         <Text style={styles.content}>{selectedBlog.content}</Text>
-      </ScrollView>
-      <View style={styles.bottomBar}>
+      </Animated.ScrollView>
+      <Animated.View style={[styles.bottomBar, {transform:[{translateY:bottomBarY}]}]}>
         <View style={{flexDirection:'row', gap:5, alignItems:'center'}}>
           <TouchableOpacity onPress={() => toggleIcon('liked')}>
             <Like1
@@ -110,7 +126,7 @@ const BlogDetail = ({route}) => {
             size={24}
           />
         </TouchableOpacity>
-      </View>
+      </Animated.View>
     </View>
   );
 };
@@ -178,6 +194,6 @@ const styles = StyleSheet.create({
     fontFamily: fontType['Pjs-Medium'],
     fontSize: 10,
     lineHeight: 20,
-    marginTop: 15,
-  },
+    marginTop: 15,
+  },
 });

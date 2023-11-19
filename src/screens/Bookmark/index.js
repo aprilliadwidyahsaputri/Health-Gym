@@ -1,5 +1,5 @@
-import {StyleSheet, Text, View, ScrollView,StatusBar} from 'react-native';
-import React from 'react';
+import {StyleSheet, Text, View, ScrollView, FlatList, Animated,StatusBar} from 'react-native';
+import React, {useRef} from 'react';
 import {Add,MenuBoard,Radar,User} from 'iconsax-react-native';
 import {BlogList, Program} from '../../../data';
 import { ItemBookmark, ItemSmall } from '../../components';

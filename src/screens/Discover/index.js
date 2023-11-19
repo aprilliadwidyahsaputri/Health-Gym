@@ -1,23 +1,32 @@
-import {StyleSheet, Text, View, ScrollView, FlatList,StatusBar} from 'react-native';
-import React from 'react';
+import {StyleSheet, Text, View, ScrollView, FlatList, Animated} from 'react-native';
+import React, {useRef} from 'react';
 import {BlogList} from '../../../data';
 import {ItemSmall} from '../../components'; 
-import {Notification,User,SearchNormal1,MenuBoard,Radar,Sagittarius } from 'iconsax-react-native';
+import {SearchNormal1} from 'iconsax-react-native';
 import { fontType, colors } from '../../theme';
 
-const Itemexercise = ({item}) => {
+const data = [
+  {id: 1, label: 'Klasik'},
+  {id: 2, label: 'Kurangi Berat'},
+  {id: 3, label: 'Membangun otot'},
+  {id: 4, label: 'Membentuk tubuh'},
+  {id: 5, label: 'Seluruh tubuh'},
+];
+
+const ItemRecent = ({item}) => {
   return (
-    <View style={exercise.button}>
-      <Text style={exercise.label}>{item.label}</Text>
+    <View style={recent.button}>
+      <Text style={recent.label}>{item.label}</Text>
     </View>
   );
 };
-const FlatListexercise = () => {
+const FlatListRecent = () => {
   const renderItem = ({item}) => {
-    return <Itemexercise item={item} />;
+    return <ItemRecent item={item} />;
   };
   return (
     <FlatList
+      data={data}
       keyExtractor={item => item.id}
       renderItem={item => renderItem({...item})}
       ItemSeparatorComponent={() => <View style={{width: 10}} />}
@@ -27,30 +36,46 @@ const FlatListexercise = () => {
     />
   );
 };
-const Latihan = () => {
+const Discover = () => {
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const diffClampY = Animated.diffClamp(scrollY, 0, 142);
+  const recentY = diffClampY.interpolate({
+    inputRange: [0, 142],
+    outputRange: [0, -142],
+    extrapolate: 'clamp',
+  });
   const recentBlog = BlogList.slice(5);
   return (
-<View style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
-       <StatusBar translucent={false} backgroundColor={colors.darkModeBlue()}/> 
-        <Text style={{...styles.title}}>Latihan</Text>
-        <SearchNormal1 color={colors.black()} variant="Linear" size={24} />
+        <View style={styles.bar}>
+          <SearchNormal1 size={18} color={colors.grey(0.5)} variant="Linear" />
+          <Text style={styles.placeholder}>Search</Text>
+        </View>
       </View>
       <View>
-        <Text style={exercise.text}>Simple Workouts At Home</Text> 
-        <FlatListexercise />
+      <Animated.View style={[recent.container, {transform: [{translateY: recentY}]}]}>
+      <Text style={recent.text}>Recent Search</Text>
+      <FlatListRecent />
+      </Animated.View>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.listCard}>
-          {recentBlog.map((item, index) => (
+      <Animated.ScrollView
+        showsVerticalScrollIndicator={false}
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {y: scrollY}}}],
+          {useNativeDriver: true},
+        )}
+        contentContainerStyle={{paddingTop: 142}}>
+          <View style={styles.listCard}>
+        {recentBlog.map((item, index) => (
             <ItemSmall item={item} key={index} />
-          ))}
-        </View>
-      </ScrollView>
+        ))}
+    </View>
+        </Animated.ScrollView>
     </View>
   );
 };
-export default Latihan;
+export default Discover;
 const styles = StyleSheet.create({
   listCard: {
     paddingHorizontal: 24,
@@ -62,27 +87,22 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white(),
   },
   header: {
-    
     paddingHorizontal: 24,
-    justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
-    height:52,
-    elevation: 8,
-    paddingTop:8,
-    paddingBottom:4,
-    backgroundColor: colors.darkModeBlue(),
-
-  },
-  title: {
-    fontSize: 20,
-    fontFamily: fontType['Pjs-ExtraBold'],
-    color: colors.black(),
-    
+    height: 52,
+    paddingTop: 8,
+    paddingBottom: 4,
+    position: 'absolute',
+    top: 0,
+    zIndex: 1000,
+    right: 0,
+    left: 0,
+    backgroundColor: colors.white(),
   },
   bar: {
     flexDirection: 'row',
-    padding: 20,
+    padding: 10,
     gap: 10,
     alignItems: 'center',
     backgroundColor: colors.grey(0.05),
@@ -90,39 +110,40 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   placeholder: {
-    fontSize: 15,
+    fontSize: 14,
     fontFamily: fontType['Pjs-Medium'],
     color: colors.grey(0.5),
     lineHeight: 18,
   },
-  container1: {
-    backgroundColor: colors.white(),
-  },
-  header1: {
-    paddingHorizontal: 24,
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-    height:52,
-    elevation: 8,
-    paddingTop:8,
-    paddingBottom:4,
-    backgroundColor: colors.darkModeBlue(),
-
-  },
 });
-const exercise = StyleSheet.create({
+const recent = StyleSheet.create({
+  button: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 25,
+    borderColor: colors.grey(0.15),
+    borderWidth: 1,
+    backgroundColor: colors.grey(0.03),
+  },
   label: {
     fontSize: 12,
     fontFamily: fontType['Pjs-Medium'],
     color: colors.grey(0.65),
   },
   text: {
-    fontSize: 20,
+    fontSize: 14,
     fontFamily: fontType['Pjs-Bold'],
     color: colors.black(),
-    paddingVertical: 10,
-    paddingHorizontal: 78,
-    backgroundColor: colors.darkModeBlue(0.10),
+    paddingVertical: 5,
+    paddingHorizontal: 24,
+  },
+  container:{
+    position: 'absolute',
+    backgroundColor: colors.white(),
+    zIndex: 999,
+    top: 52,
+    left: 0,
+    right: 0,
+    elevation: 1000,
   },
 });
