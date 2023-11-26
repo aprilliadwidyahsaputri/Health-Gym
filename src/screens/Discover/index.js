@@ -1,9 +1,10 @@
-import {StyleSheet, Text, View, ScrollView, FlatList, Animated} from 'react-native';
+import {StyleSheet, Text, View, ScrollView, FlatList, Animated,TouchableWithoutFeedback} from 'react-native';
 import React, {useRef} from 'react';
 import {BlogList} from '../../../data';
 import {ItemSmall} from '../../components'; 
 import {SearchNormal1} from 'iconsax-react-native';
 import { fontType, colors } from '../../theme';
+import { useNavigation } from "@react-navigation/native";
 
 const data = [
   {id: 1, label: 'Klasik'},
@@ -37,6 +38,7 @@ const FlatListRecent = () => {
   );
 };
 const Discover = () => {
+  const navigation = useNavigation();
   const scrollY = useRef(new Animated.Value(0)).current;
   const diffClampY = Animated.diffClamp(scrollY, 0, 142);
   const recentY = diffClampY.interpolate({
@@ -47,12 +49,14 @@ const Discover = () => {
   const recentBlog = BlogList.slice(5);
   return (
     <View style={styles.container}>
+      <TouchableWithoutFeedback onPress={() => navigation.navigate("SearchPage")}>
       <View style={styles.header}>
         <View style={styles.bar}>
           <SearchNormal1 size={18} color={colors.grey(0.5)} variant="Linear" />
           <Text style={styles.placeholder}>Search</Text>
         </View>
       </View>
+      </TouchableWithoutFeedback>
       <View>
       <Animated.View style={[recent.container, {transform: [{translateY: recentY}]}]}>
       <Text style={recent.text}>Recent Search</Text>

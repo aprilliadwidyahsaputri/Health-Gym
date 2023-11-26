@@ -1,8 +1,8 @@
 import React from 'react';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Home, Discover, Bookmark, Profile, BlogDetail} from '../screens';
-import {Home2, MenuBoard, Receipt21, ProfileCircle} from 'iconsax-react-native'; 
+import {Home, Discover, Bookmark, Profile, BlogDetail,Search,AddBlogForm} from '../screens';
+import {Home2, LocationDiscover, Receipt21, ProfileCircle} from 'iconsax-react-native'; 
 import { fontType, colors } from '../theme';
 
 const Tab = createBottomTabNavigator();
@@ -41,12 +41,12 @@ function MainApp() {
         }}
       />
       <Tab.Screen
-        name="Program"
+        name="Discover"
         component={Discover}
         options={{
-          tabBarLabel: 'Program',
+          tabBarLabel: 'Discover',
           tabBarIcon: ({focused, color}) => (
-            <MenuBoard
+            <LocationDiscover
               color={color}
               variant={focused ? 'Bold' : 'Linear'}
               size={24}
@@ -56,10 +56,10 @@ function MainApp() {
         }}
       />
       <Tab.Screen
-        name="Latihan"
+        name="Bookmark"
         component={Bookmark}
         options={{
-          tabBarLabel: 'Latihan',
+          tabBarLabel: 'Bookmark',
           tabBarIcon: ({focused, color}) => (
             <Receipt21
               color={color}
@@ -101,6 +101,26 @@ const Router = () => {
         component={BlogDetail}
         options={{
           headerShown: false, 
+          animationEnabled: true,
+          animationTypeForReplace: 'pop',
+          gestureEnabled: true,
+          gestureDirection : 'h                    orizontal',
+          ...TransitionPresets.SlideFromRightIOS,
+        }}
+      />
+        <Stack.Screen
+        name="SearchPage"
+        component={Search}
+        options={{
+          headerShown: false,
+          presentation: 'transparentModal',
+        }}
+      />
+      <Stack.Screen
+        name="AddBlog"
+        component={AddBlogForm}
+        options={{
+          headerShown: false,
           animationEnabled: true,
           animationTypeForReplace: 'pop',
           gestureEnabled: true,

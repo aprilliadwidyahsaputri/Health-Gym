@@ -1,5 +1,6 @@
 import {ScrollView, StyleSheet,StatusBar, Text,TextInput, View, TouchableOpacity} from 'react-native';
-import {Setting2,User,SearchNormal1,MenuBoard,Radar,Sagittarius,Activity,BookSquare,Brodcast,ChartFail,Cup,Flash } from 'iconsax-react-native';
+import {Setting2,User,SearchNormal1,MenuBoard,Radar,Sagittarius,Activity,BookSquare,Brodcast,ChartFail,Cup,Flash,Edit} from 'iconsax-react-native';
+import { useNavigation } from "@react-navigation/native";
 import React from 'react';
 import FastImage from 'react-native-fast-image';
 import {ProfileData, BlogList} from '../../../data';
@@ -67,11 +68,18 @@ const Profile = () => {
       </View>
         </View>
       </ScrollView>
-    </View>
+      <TouchableOpacity
+       style={styles.floatingButton}
+         onPress={() => navigation.navigate("AddBlog")}
+      >
+      <Edit color={colors.white()} variant="Linear" size={20} />
+      </TouchableOpacity>
+      </View>
   );
 };
 
 export default Profile;
+const navigation = useNavigation();
 const styles = StyleSheet.create({
 container: {
     flex: 1,
@@ -136,6 +144,23 @@ Icon: {
     top: 10,
     left: 1,
     
+  },
+  floatingButton: {
+    backgroundColor: colors.blue(),
+    padding: 15,
+    position: 'absolute',
+    bottom: 24,
+    right: 24,
+    borderRadius: 10,
+    shadowColor: colors.blue(),
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+
+    elevation: 8,
   },
 });
 const profile = StyleSheet.create({
