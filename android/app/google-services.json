@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "829141435196",
+    "project_id": "healthgym-5ec43",
+    "storage_bucket": "healthgym-5ec43.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:829141435196:android:4f210d982121b03bf09439",
+        "android_client_info": {
+          "package_name": "com.heatlhgymmain"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxUI9pLJbacYBA5wYvk8Ovg_Z7kkMGP5w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

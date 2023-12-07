@@ -7,6 +7,8 @@ import FastImage from 'react-native-fast-image';
 import { fontType, colors } from '../../theme';
 import ActionSheet from 'react-native-actions-sheet';
 import axios from 'axios';
+import storage from '@react-native-firebase/storage';
+import firestore from '@react-native-firebase/firestore';
 
 const formatNumber = number => {
   if (number >= 1000000000) {
@@ -51,35 +53,48 @@ const BlogDetail = ({ route }) => {
   };
 
   useEffect(() => {
-    getBlogById();
+    const subscriber = firestore()
+      .collection('discover')
+      .doc(blogId)
+      .onSnapshot(documentSnapshot => {
+        const blogData = documentSnapshot.data();
+        if (blogData) {
+          console.log('Jenis Latihan : ', blogData);
+          setSelectedBlog(blogData);
+        } else {
+          console.log(`Jenis Latihan dengan ID ${blogId} tidak ditemukan.`);
+        }
+      });
+    setLoading(false);
+    return () => subscriber();
   }, [blogId]);
-
-  const getBlogById = async () => {
+  const navigateEdit = () => {
+    closeActionSheet();
+    navigation.navigate('EditBlog', { blogId });
+  };
+  const handleDelete = async () => {
+    setLoading(true);
     try {
-      const response = await axios.get(
-        `https://656e7eb3fc2ddab8389a9e24.mockapi.io/discover/${blogId}`,
-      );
-      setSelectedBlog(response.data);
-      setLoading(false);
+      await firestore()
+        .collection('discover')
+        .doc(blogId)
+        .delete()
+        .then(() => {
+          console.log('Jenis Latihan Dihapus!');
+        });
+      if (selectedBlog?.image) {
+        const imageRef = storage().refFromURL(selectedBlog?.image);
+        await imageRef.delete();
+      }
+      console.log('Jenis Latihan Dihapus!');
+      closeActionSheet();
+      setSelectedBlog(null);
+      setLoading(false)
+      navigation.navigate('Discover');
     } catch (error) {
       console.error(error);
     }
   };
-
-  const navigateEdit = () => {
-    closeActionSheet()
-    navigation.navigate('EditBlog', { blogId })
-  }
-  const handleDelete = async () => {
-    await axios.delete(`https://656e7eb3fc2ddab8389a9e24.mockapi.io/discover/${blogId}`)
-      .then(() => {
-        closeActionSheet()
-        navigation.navigate('Discover');
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
   const navigation = useNavigation();
   const toggleIcon = iconName => {
     setIconStates(prevStates => ({

@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   searchbar: {
     width: '80%',
     height: 40,
-    borderColor: 'darkModeBlue',
+    borderColor: 'blue',
     borderWidth: 2,
     borderRadius: 20,
     paddingLeft: 60,

@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View, ScrollView, FlatList, Animated, TouchableWithoutFeedback, ActivityIndicator, RefreshControl } from 'react-native';
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { BlogList } from '../../../data';
 import { ItemSmall } from '../../components';
 import { SearchNormal1 } from 'iconsax-react-native';
 import { fontType, colors } from '../../theme';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import axios from 'axios';
+import firestore from '@react-native-firebase/firestore';
 
 const data = [
   { id: 1, label: 'Klasik' },
@@ -43,31 +43,40 @@ const Discover = () => {
   const [loading, setLoading] = useState(true);
   const [blogData, setBlogData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const getDataBlog = async () => {
-    try {
-      const response = await axios.get(
-        'https://656e7eb3fc2ddab8389a9e24.mockapi.io/discover',
-      );
-      setBlogData(response.data);
-      setLoading(false)
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('discover')
+      .onSnapshot(querySnapshot => {
+        const blogs = [];
+        querySnapshot.forEach(documentSnapshot => {
+          blogs.push({
+            ...documentSnapshot.data(),
+            id: documentSnapshot.id,
+          });
+        });
+        setBlogData(blogs);
+        setLoading(false);
+      });
+    return () => subscriber();
+  }, []);
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
-      getDataBlog()
+      firestore()
+        .collection('blog')
+        .onSnapshot(querySnapshot => {
+          const blogs = [];
+          querySnapshot.forEach(documentSnapshot => {
+            blogs.push({
+              ...documentSnapshot.data(),
+              id: documentSnapshot.id,
+            });
+          });
+          setBlogData(blogs);
+        });
       setRefreshing(false);
     }, 1500);
   }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      getDataBlog();
-    }, [])
-  );
   const scrollY = useRef(new Animated.Value(0)).current;
   const diffClampY = Animated.diffClamp(scrollY, 0, 142);
   const recentY = diffClampY.interpolate({
